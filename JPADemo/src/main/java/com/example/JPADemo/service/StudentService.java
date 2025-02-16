@@ -23,7 +23,7 @@ public class StudentService {
     }
 
     public Student getStudentByRno(int rno) {
-        return studentRepo.findById(rno).orElse(new Student());
+        return studentRepo.findById(rno).orElse(null);
     }
 
     public void updateStudent(Student student) {
@@ -38,5 +38,15 @@ public class StudentService {
     public String clearStudents() {
         studentRepo.deleteAll();
         return "entire data's deleted..";
+    }
+
+    //This is a customized method
+    //Definition declared in Repository
+    public List<Student> getByTechnology(String technology) {
+        return studentRepo.findByTechnology(technology);
+    }
+
+    public List<Student> getByGenderAndTechnology(String gender, String technology) {
+        return studentRepo.findByGenderAndTechnology(gender,technology);
     }
 }

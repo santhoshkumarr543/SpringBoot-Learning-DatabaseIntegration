@@ -3,6 +3,9 @@ package com.example.JPADemo.controller;
 import com.example.JPADemo.model.Student;
 import com.example.JPADemo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -20,9 +23,13 @@ public class StudentController {
     }
 
     @GetMapping("/students/{rno}")
-    public Student getStudentByRno(@PathVariable int rno)
+    public ResponseEntity<Student> getStudentByRno(@PathVariable int rno)
     {
-        return studentService.getStudentByRno(rno);
+        Student student = studentService.getStudentByRno(rno);
+
+        if(student == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<>(student, HttpStatus.OK);
     }
 
     @PostMapping("/students")
@@ -47,4 +54,16 @@ public class StudentController {
         return studentService.clearStudents();
     }
 
+    @GetMapping("/students/technology/{technology}")
+    public List<Student> getByTechnology(@PathVariable String technology)
+    {
+        return studentService.getByTechnology(technology);
+    }
+
+    @PostMapping("/students/filter")
+    public List<Student> getByGenderandTechnology(@Param("gender") String gender,
+                                                  @Param("technology") String technology)
+    {
+        return studentService.getByGenderAndTechnology(gender,technology);
+    }
 }
